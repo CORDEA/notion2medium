@@ -31,12 +31,13 @@ void main(string[] args)
     {
         if (Code code = cast(Code) c)
         {
-            createGist(code, filename, token);
+            auto id = createGist(code, filename, token);
+            writeln(id);
         }
     }
 }
 
-bool createGist(Code code, string filename, string token)
+string createGist(Code code, string filename, string token)
 {
     auto http = HTTP();
     http.method = HTTP.Method.post;
@@ -52,19 +53,22 @@ bool createGist(Code code, string filename, string token)
     http.setPostData(json.toString(), "application/json");
 
     HTTP.StatusLine status;
+    auto response = appender!(ubyte[])();
+    http.onReceive = (data) { response ~= data; return data.length; };
     http.onReceiveStatusLine = (l) { status = l; };
     http.perform();
 
-    writeln(status);
-    return status.code == 201;
+    assert(status.code == 201);
+    auto parsed = parseJSON(cast(char[])(response[]));
+    return parsed["id"].str;
 }
 
 Content[] parseContent(string[] lines)
 {
     auto inCode = false;
     auto lang = "";
-    auto currentLines = appender!(string[])([]);
-    auto result = appender!(Content[])([]);
+    auto currentLines = appender!(string[])();
+    auto result = appender!(Content[])();
     foreach (string line; lines)
     {
         if (line.startsWith("```"))
