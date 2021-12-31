@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/notion2medium
+notion2medium.so
+notion2medium.dylib
+notion2medium.dll
+notion2medium.a
+notion2medium.lib
+notion2medium-test-*
+*.exe
+*.o
+*.obj
+*.lst

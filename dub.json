@@ -1,0 +1,8 @@
+{
+	"authors": [
+		"cordea"
+	],
+	"description": "A minimal D application.",
+	"license": "Apache-2.0",
+	"name": "notion2medium"
+}
