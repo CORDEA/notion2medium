@@ -1,8 +1,10 @@
 import std.stdio;
 import std.file;
+import std.path;
 import std.array;
 import std.format;
 import std.algorithm.searching;
+import std.json;
 
 void main(string[] args)
 {
@@ -17,9 +19,25 @@ void main(string[] args)
     }
     auto content = readText(filename);
     auto parsed = parseContent(content.split());
+    foreach (Content c; parsed)
+    {
+        if (Code code = cast(Code) c)
+        {
+            createGist(code, filename, "");
+        }
+    }
 }
 
-private Content[] parseContent(string[] lines)
+void createGist(Code code, string filename, string token)
+{
+    auto name = filename.baseName().setExtension(code.langCode() is null ? "txt" : code.langCode());
+    JSONValue file = JSONValue([
+        name: JSONValue(["content": code.values().join("\n")])
+    ]);
+    JSONValue json = JSONValue(["files": file]);
+}
+
+Content[] parseContent(string[] lines)
 {
     auto inCode = false;
     auto lang = "";
