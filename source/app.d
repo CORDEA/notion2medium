@@ -1,6 +1,17 @@
 import std.stdio;
+import std.file;
 
-void main()
+void main(string[] args)
 {
-	writeln("Edit source/app.d to start your project.");
+    if (args.length < 2)
+    {
+        return;
+    }
+    auto filename = args[1];
+    if (!exists(filename))
+    {
+        return;
+    }
+    auto content = readText(filename);
+    writeln(content);
 }
