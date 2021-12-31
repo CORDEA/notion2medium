@@ -22,13 +22,13 @@ void main(string[] args)
 private Content[] parseContent(string[] lines)
 {
     auto inCode = false;
+    auto lang = "";
     auto currentLines = appender!(string[])([]);
     auto result = appender!(Content[])([]);
     foreach (string line; lines)
     {
         if (line.startsWith("```"))
         {
-            auto lang = line[3 .. $];
             auto l = array(currentLines[]);
             if (l.length > 0)
             {
@@ -43,6 +43,7 @@ private Content[] parseContent(string[] lines)
             }
             currentLines.clear();
             inCode = !inCode;
+            lang = line.length > 3 ? line[3 .. $] : null;
             continue;
         }
         currentLines.put(line);
