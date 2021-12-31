@@ -13,3 +13,6 @@ notion2medium-test-*
 *.o
 *.obj
 *.lst
+
+.idea/
+*.iml
