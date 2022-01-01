@@ -26,7 +26,7 @@ void main(string[] args)
         return;
     }
     auto content = readText(filename);
-    auto parsed = parseContent(content.split());
+    auto parsed = parseContent(content.split("\n"));
 
     auto medium = appender!string();
     foreach (Content c; parsed)
