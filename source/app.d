@@ -13,20 +13,11 @@ import std.ascii;
 
 void main(string[] args)
 {
-    if (args.length < 2)
-    {
-        assert(false, "Notion's markdown is required.");
-    }
+    assert(args.length > 1, "Notion's markdown is required.");
     auto filename = args[1];
-    if (!exists(filename))
-    {
-        assert(false, "Notion's markdown is required.");
-    }
+    assert(exists(filename), "Notion's markdown is required.");
     auto token = environment.get("GITHUB_TOKEN");
-    if (token is null)
-    {
-        assert(false, "GitHub API token is required.");
-    }
+    assert(token, "GitHub API token is required.");
     auto content = readText(filename);
     auto parsed = parseContent(content.split(newline));
 
