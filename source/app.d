@@ -14,17 +14,17 @@ void main(string[] args)
 {
     if (args.length < 2)
     {
-        return;
+        assert(false, "Notion's markdown is required.");
     }
     auto filename = args[1];
     if (!exists(filename))
     {
-        return;
+        assert(false, "Notion's markdown is required.");
     }
     auto token = environment.get("GITHUB_TOKEN");
     if (token is null)
     {
-        return;
+        assert(false, "GitHub API token is required.");
     }
     auto content = readText(filename);
     auto parsed = parseContent(content.split("\n"));
