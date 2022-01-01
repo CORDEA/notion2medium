@@ -27,14 +27,23 @@ void main(string[] args)
     }
     auto content = readText(filename);
     auto parsed = parseContent(content.split());
+
+    auto medium = appender!string();
     foreach (Content c; parsed)
     {
         if (Code code = cast(Code) c)
         {
             auto id = createGist(code, filename, token);
-            writeln(id);
+            medium ~= "https://carbon.now.sh/";
+            medium ~= id;
+            medium ~= "\n";
+        }
+        else
+        {
+            medium ~= c.values().join("\n");
         }
     }
+    write(medium[]);
 }
 
 string createGist(Code code, string filename, string token)
