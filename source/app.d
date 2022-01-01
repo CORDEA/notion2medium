@@ -8,6 +8,7 @@ import std.algorithm.searching;
 import std.process;
 import std.net.curl;
 import std.json;
+import std.regex;
 
 void main(string[] args)
 {
@@ -74,11 +75,12 @@ string createGist(Code code, string filename, string token)
 
 Content[] parseContent(string[] lines)
 {
+    auto linkRegex = regex(r"\[[^\]]+\]\(([^\)]+)\)");
     auto inCode = false;
     auto lang = "";
     auto currentLines = appender!(string[])();
     auto result = appender!(Content[])();
-    foreach (string line; lines)
+    foreach (line; lines)
     {
         if (line.startsWith("```"))
         {
@@ -99,12 +101,19 @@ Content[] parseContent(string[] lines)
             lang = line.length > 3 ? line[3 .. $] : null;
             continue;
         }
-        currentLines.put(line);
+        if (inCode)
+        {
+            currentLines ~= line;
+        }
+        else
+        {
+            currentLines ~= line.replaceAll(linkRegex, "$1");
+        }
     }
     auto l = currentLines[];
     if (l.length > 0)
     {
-        result.put(new Text(l));
+        result ~= new Text(l);
     }
     return result[];
 }
