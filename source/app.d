@@ -9,6 +9,7 @@ import std.process;
 import std.net.curl;
 import std.json;
 import std.regex;
+import std.ascii;
 
 void main(string[] args)
 {
@@ -27,7 +28,7 @@ void main(string[] args)
         assert(false, "GitHub API token is required.");
     }
     auto content = readText(filename);
-    auto parsed = parseContent(content.split("\n"));
+    auto parsed = parseContent(content.split(newline));
 
     auto medium = appender!string();
     foreach (Content c; parsed)
@@ -37,11 +38,11 @@ void main(string[] args)
             auto id = createGist(code, filename, token);
             medium ~= "https://carbon.now.sh/";
             medium ~= id;
-            medium ~= "\n";
+            medium ~= newline;
         }
         else
         {
-            medium ~= c.values().join("\n");
+            medium ~= c.values().join(newline);
         }
     }
     write(medium[]);
@@ -57,7 +58,7 @@ string createGist(Code code, string filename, string token)
 
     auto name = filename.baseName().setExtension(code.langCode() is null ? "txt" : code.langCode());
     JSONValue file = JSONValue([
-        name: JSONValue(["content": code.values().join("\n")])
+        name: JSONValue(["content": code.values().join(newline)])
     ]);
     JSONValue json = JSONValue(["files": file]);
     http.setPostData(json.toString(), "application/json");
