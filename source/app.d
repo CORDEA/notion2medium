@@ -87,11 +87,11 @@ Content[] parseContent(string[] lines)
             {
                 if (inCode)
                 {
-                    result.put(new Code(l, lang));
+                    result ~= new Code(l, lang);
                 }
                 else
                 {
-                    result.put(new Text(l));
+                    result ~= new Text(l);
                 }
             }
             currentLines.clear();
